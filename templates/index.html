@@ -48,6 +48,17 @@
             display: flex;
             justify-content: center;
         }
+
+        .loading {
+            display: none;
+            text-align: center;
+            font-size: 1.2em;
+            color: #007bff;
+        }
+
+        .no-data {
+            color: #dc3545;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
@@ -78,6 +89,9 @@
             <a id="downloadData" class="btn btn-success ms-2" style="display: none;">Download Data</a>
         </div>
 
+        <!-- Loading Spinner -->
+        <div id="loading" class="loading">Fetching stock data...</div>
+
         <!-- Data Table -->
         <div id="dataWrapper" class="data-table">
             <h3>Stock Data</h3>
@@ -94,6 +108,7 @@
                 </thead>
                 <tbody id="dataTableBody"></tbody>
             </table>
+            <p id="noDataMessage" class="no-data" style="display: none;">No data available for the given range.</p>
         </div>
     </div>
 
@@ -105,13 +120,22 @@
                 const startDate = $("#start_date").val();
                 const endDate = $("#end_date").val();
 
+                // Show loading spinner
+                $("#loading").show();
+                $("#dataWrapper").hide();
+                $("#downloadData").hide();
+                $("#noDataMessage").hide();
+
                 $.ajax({
-                    url: "/",
+                    url: "https://nifty50-data-downloader.onrender.com",  // Render URL
                     type: "POST",
                     data: { ticker, start_date: startDate, end_date: endDate },
                     success: function (response) {
+                        $("#loading").hide();
                         if (response.error) {
                             alert(response.error);
+                        } else if (response.data.length === 0) {
+                            $("#noDataMessage").show();
                         } else {
                             $("#dataWrapper").show();
                             $("#dataTableBody").empty();
@@ -133,6 +157,7 @@
                         }
                     },
                     error: function () {
+                        $("#loading").hide();
                         alert("An error occurred while fetching data.");
                     }
                 });
