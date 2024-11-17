@@ -42,19 +42,20 @@ pip install -r requirements.txt
 
 The backend is built using Flask and communicates with the Yahoo Finance API through the yfinance Python library. It listens for POST requests from the frontend and fetches the stock data for the given ticker and date range.
 
-###Frontend Overview
+### Frontend Overview
 HTML: The frontend is built with simple HTML forms and uses Bootstrap for styling.
 CSS: A custom CSS stylesheet is used to add a gradient background and animations.
 JavaScript/jQuery: Used for handling form submission and dynamically displaying the stock data. It also handles the download functionality.
 API Endpoint
 POST /: Receives the ticker symbol, start date, and end date from the frontend, fetches the stock data from Yahoo Finance using yfinance, and returns the data as a JSON response.
-###Dependencies
+
+### Dependencies
 Flask – A lightweight Python web framework.
 yfinance – Python library to fetch stock data from Yahoo Finance.
 Bootstrap – For responsive design.
 jQuery – For handling AJAX requests.
 
-###Usage
+### Usage
 -Navigate to the deployed website at https://nifty50-data-downloader.onrender.com/.
 -Enter a stock ticker symbol (e.g., ZEEL).
 -Select the start and end dates.
@@ -62,6 +63,6 @@ jQuery – For handling AJAX requests.
 -The data will be displayed in a table. You can toggle the visibility of the table by clicking the "Toggle Data View" button.
 -To download the data, click the "Download Data" button, which will generate a CSV file.
 
-###Acknowledgements
+### Acknowledgements
 The data is fetched using the yfinance library, which provides easy access to historical stock data from Yahoo Finance.
 The frontend uses Bootstrap for responsive design and jQuery for handling AJAX requests.
