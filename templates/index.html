@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Stock Data Downloader</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb, #8fd3f4);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Arial', sans-serif;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            margin-top: 5%;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+        }
+
+        .data-table {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .center-btn {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Interactive Stock Data Downloader</h1>
+        <form id="stockForm" method="POST">
+            <div class="form-group">
+                <label for="ticker" class="form-label">Stock Ticker Symbol</label>
+                <input type="text" class="form-control" id="ticker" name="ticker" placeholder="e.g., ZEEL" required>
+            </div>
+            <div class="form-group">
+                <label for="start_date" class="form-label">Start Date</label>
+                <input type="date" class="form-control" id="start_date" name="start_date" required>
+            </div>
+            <div class="form-group">
+                <label for="end_date" class="form-label">End Date</label>
+                <input type="date" class="form-control" id="end_date" name="end_date" required>
+            </div>
+            <div class="center-btn">
+                <button type="submit" class="btn btn-primary">Fetch Data</button>
+            </div>
+        </form>
+
+        <!-- Toggle Button -->
+        <div id="toggleWrapper" class="mt-4 text-center">
+            <button id="toggleData" class="btn btn-secondary">Toggle Data View</button>
+            <a id="downloadData" class="btn btn-success ms-2" style="display: none;">Download Data</a>
+        </div>
+
+        <!-- Data Table -->
+        <div id="dataWrapper" class="data-table">
+            <h3>Stock Data</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Open</th>
+                        <th>High</th>
+                        <th>Low</th>
+                        <th>Close</th>
+                        <th>Volume</th>
+                    </tr>
+                </thead>
+                <tbody id="dataTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#stockForm").on("submit", function (e) {
+                e.preventDefault();
+                const ticker = $("#ticker").val();
+                const startDate = $("#start_date").val();
+                const endDate = $("#end_date").val();
+
+                $.ajax({
+                    url: "/",
+                    type: "POST",
+                    data: { ticker, start_date: startDate, end_date: endDate },
+                    success: function (response) {
+                        if (response.error) {
+                            alert(response.error);
+                        } else {
+                            $("#dataWrapper").show();
+                            $("#dataTableBody").empty();
+                            response.data.forEach(row => {
+                                $("#dataTableBody").append(`
+                                    <tr>
+                                        <td>${row.Date}</td>
+                                        <td>${row.Open}</td>
+                                        <td>${row.High}</td>
+                                        <td>${row.Low}</td>
+                                        <td>${row.Close}</td>
+                                        <td>${row.Volume}</td>
+                                    </tr>
+                                `);
+                            });
+                            $("#downloadData").attr("href", `data:text/csv;charset=utf-8,${encodeURIComponent(JSONToCSV(response.data))}`);
+                            $("#downloadData").attr("download", `${ticker}_stock_data.csv`);
+                            $("#downloadData").show();
+                        }
+                    },
+                    error: function () {
+                        alert("An error occurred while fetching data.");
+                    }
+                });
+            });
+
+            $("#toggleData").on("click", function () {
+                $("#dataWrapper").toggle();
+            });
+
+            function JSONToCSV(jsonData) {
+                const keys = Object.keys(jsonData[0]);
+                const rows = jsonData.map(row => keys.map(key => row[key]).join(","));
+                return [keys.join(","), ...rows].join("\n");
+            }
+        });
+    </script>
+</body>
+</html>
