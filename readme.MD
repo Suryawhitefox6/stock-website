@@ -1,4 +1,4 @@
-# Interactive Stock Data Downloader
+# StockSleuth : Interactive Stock Data Downloader
 
 This project allows users to fetch stock data for Nifty 50 stocks using the Yahoo Finance API. The frontend is designed with an interactive UI where users can input the stock ticker symbol and a date range to retrieve stock data. The backend is built using Flask and communicates with the Yahoo Finance API to fetch and display stock data.
 
