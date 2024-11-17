@@ -33,12 +33,11 @@ You can access the live version of the application at:
    cd stock-data-downloader
 
 2. Install dependencies:
-  ```bash
-  pip install -r requirements.txt
+pip install -r requirements.txt
 3. Run the Flask application:
-  ```bash
    python app.py
 4. Open your browser and navigate to http://127.0.0.1:5000/ to view the app.
+
 ###Backend Configuration
 
 The backend is built using Flask and communicates with the Yahoo Finance API through the yfinance Python library. It listens for POST requests from the frontend and fetches the stock data for the given ticker and date range.
