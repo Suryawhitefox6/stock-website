@@ -33,11 +33,11 @@ You can access the live version of the application at:
    cd stock-data-downloader
 
 2. Install dependencies:
-```bash
+  ```bash
   pip install -r requirements.txt
 3. Run the Flask application:
-```bash
-python app.py
+  ```bash
+   python app.py
 4. Open your browser and navigate to http://127.0.0.1:5000/ to view the app.
 ###Backend Configuration
 
